@@ -1,0 +1,32 @@
+<?php
+// src/AppBundle/Document/Product.php
+namespace AppBundle\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+
+/**
+ * @MongoDB\Document(repositoryClass="AppBundle\Repository\ProductRepository")
+ */
+class Product
+{
+    /**
+     * @MongoDB\Id
+     */
+    protected $id;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $name;
+
+    /**
+     * @MongoDB\Float
+     */
+    protected $price;
+    
+    /**
+    *@MongoDB\ReferenceOne(targetDocument="Store", inversedBy="product")
+    */
+    protected $store;
+
+}

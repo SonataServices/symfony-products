@@ -1,0 +1,13 @@
+default:
+  suites:
+    default:
+        contexts:
+            - FeatureContext:
+                session:   '@session'
+                logger: '@logger'
+  extensions:
+    Behat\Symfony2Extension: ~
+    Behat\MinkExtension:      
+            goutte: ~
+            selenium2: ~
+      

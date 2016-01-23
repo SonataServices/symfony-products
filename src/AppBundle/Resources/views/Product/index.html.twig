@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Product list</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Store</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for document in documents %}
+        <tr>
+            <td><a href="{{ path('product_show', { 'id': document.id }) }}">{{ document.id }}</a></td>
+            <td>{{ document.name }}</td>
+            <td>{{ document.price }}</td>
+            <td>
+                {% if document.store is empty %}
+                    {{ "no store" }}
+                {% else %}
+                    {{ document.store.name }}
+                {% endif %}
+            </td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('product_show', { 'id': document.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('product_edit', { 'id': document.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    <li>
+        <a href="{{ path('product_new') }}">
+            Create a new entry
+        </a>
+    </li>
+</ul>
+{% endblock %}
