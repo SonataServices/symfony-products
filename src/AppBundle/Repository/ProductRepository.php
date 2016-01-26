@@ -12,4 +12,6 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
  */
 class ProductRepository extends DocumentRepository
 {
+    
+    
 }

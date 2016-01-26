@@ -75,6 +75,12 @@ class StoreController extends Controller
             $dm->persist($document);
             $dm->flush();
 
+            $this->addFlash(
+                'notice',
+                'Store created successfully'
+                #'done'
+            );
+
             return $this->redirect($this->generateUrl('store_show', array('id' => $document->getId())));
         }
 

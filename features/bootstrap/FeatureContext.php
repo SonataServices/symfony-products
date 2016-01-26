@@ -15,9 +15,9 @@ use Behat\Behat\Tester\Exception\PendingException;
  */
 class FeatureContext implements Context, SnippetAcceptingContext
 {
-    
-    private $startUrl = 'http://example.com';
+    private $startUrl = 'http://localhost:8000';
     private $logger;
+    private $mink;
       
     /**
      * Initializes context.
@@ -28,7 +28,18 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function __construct($session, $logger)
     {
-        $this->logger=$logger;        
+        $this->logger=$logger;     
+        // init Mink and register sessions
+        $this->mink = new Mink(array(
+            'goutte1' => new Session(new GoutteDriver(new GoutteClient())),
+            'goutte2' => new Session(new GoutteDriver(new GoutteClient())),
+            'selenium'  => new Session(new \Behat\Mink\Driver\Selenium2Driver('firefox'))
+         ));
+        // set the default session name
+        $this->mink->setDefaultSessionName('selenium');
+
+        // visit a page
+        //$this->mink->getSession()->visit($this->startUrl);
     }
     
     /**
@@ -36,73 +47,38 @@ class FeatureContext implements Context, SnippetAcceptingContext
     */
     public function theFollowingStoresExist(TableNode $table)
     {
-        
         $hash = $table->getHash();
         foreach ($hash as $row) 
         {             
             $this->logger->info($row['name']);
         }
-        
-        throw new PendingException();
+        //throw new PendingException();
     }
 
-    
-    /**
-     * @Given /^I am in a directory "([^"]*)"$/
-     */
-    public function iAmInADirectory($dir)
-    {
-        if (!file_exists($dir)) {
-            mkdir($dir);
-        }
-        chdir($dir);
-    }
-
-    /** @Given /^I have a file named "([^"]*)"$/ */
-    public function iHaveAFileNamed($file)
-    {
-        touch($file);
-    }
-
-    /** @When /^I run "([^"]*)"$/ */
-    public function iRun($command)
-    {
-        exec($command, $output);
-        $this->output = trim(implode("\n", $output));
-    }
-
-    /** @Then /^I should get:$/ */
-    public function iShouldGet(PyStringNode $string)
-    {
-        if ((string) $string !== $this->output) {
-            throw new Exception(
-                "Actual output is:\n" . $this->output
-            );
-        }
-    }   
-    
     /**
      * @Given I am on :arg1
      */
-    public function iAmOn($arg1)
+    public function iAmOn($uri)
     {
-        throw new PendingException();
+        $this->logger->info($uri);
+        $this->mink->getSession()->visit($this->startUrl.$uri);
     }
 
     /**
-     * @When I fill in :arg1 with :arg2
+     * @When I fill :arg1 with :arg2
      */
-    public function iFillInWith($arg1, $arg2)
+    public function iFillWith($name, $value)
     {
-        throw new PendingException();
-    }
-
+        //$this->mink->getSession()->getPage()->findLink('Stores')->click();
+        $this->mink->getSession()->getPage()->fillField($name, $value);
+    }    
+    
     /**
      * @When I press :arg1
      */
     public function iPress($arg1)
     {
-        throw new PendingException();
+        $this->mink->getSession()->getPage()->pressButton($arg1);
     }
 
     /**
@@ -110,9 +86,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSee($arg1)
     {
-        throw new PendingException();
+        $notice=$this->mink->getSession()->getPage()->find('named', array('id', 'notice'))->getText();
+        PHPUnit_Framework_Assert::assertEquals($arg1, $notice);
     }
-
-
-
 }
