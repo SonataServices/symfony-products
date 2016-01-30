@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,6 +38,7 @@ class StoreController extends Controller
     /**
      * Displays a form to create a new Store document.
      *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/new", name="store_new")
      * @Template()
      *
@@ -78,7 +80,6 @@ class StoreController extends Controller
             $this->addFlash(
                 'notice',
                 'Store created successfully'
-                #'done'
             );
 
             return $this->redirect($this->generateUrl('store_show', array('id' => $document->getId())));
@@ -123,6 +124,7 @@ class StoreController extends Controller
     /**
      * Displays a form to edit an existing Store document.
      *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/{id}/edit", name="store_edit")
      * @Template()
      *
@@ -184,7 +186,12 @@ class StoreController extends Controller
             $dm->persist($document);
             $dm->flush();
 
-            return $this->redirect($this->generateUrl('store_edit', array('id' => $id)));
+            $this->addFlash(
+                'notice',
+                'Store edited successfully'
+            );
+
+            return $this->redirect($this->generateUrl('store_show', array('id' => $id)));
         }
 
         return array(
@@ -222,6 +229,11 @@ class StoreController extends Controller
 
             $dm->remove($document);
             $dm->flush();
+
+            $this->addFlash(
+                'notice',
+                'Store deleted successfully'
+            );
         }
 
         return $this->redirect($this->generateUrl('store'));

@@ -37,6 +37,7 @@
           </div>
         </nav>
         <div class="container">
+            <a href="{{ logout_path(app.security.token.providerKey) }}">Logout</a>
         {% block body %}{% endblock %}
         </div>
          <!-- Latest compiled and minified JavaScript -->

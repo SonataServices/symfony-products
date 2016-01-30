@@ -82,6 +82,14 @@ class FeatureContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @When I click :arg1
+     */
+    public function iClick($arg1)
+    {
+        $this->mink->getSession()->getPage()->clickLink($arg1);
+    }
+
+    /**
      * @Then I should see :arg1
      */
     public function iShouldSee($arg1)
@@ -89,4 +97,14 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $notice=$this->mink->getSession()->getPage()->find('named', array('id', 'notice'))->getText();
         PHPUnit_Framework_Assert::assertEquals($arg1, $notice);
     }
+
+    /**
+     * @When I select :arg1 with :arg2
+     */
+    public function iSelectWith($selectName, $selectOption)
+    {
+        $select=$this->mink->getSession()->getPage()->find('named', array('select', $selectName));
+        $select->selectOption($selectOption);
+    }
+
 }

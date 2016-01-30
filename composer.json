@@ -27,7 +27,8 @@
         "jms/serializer-bundle": "0.13.*@dev",
         "friendsofsymfony/rest-bundle": "1.4.*",
         "nelmio/api-doc-bundle": "~2.4",
-        "friendsofsymfony/http-cache-bundle": "~1.0"
+        "friendsofsymfony/http-cache-bundle": "~1.0",
+        "ircmaxell/password-compat": "~1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

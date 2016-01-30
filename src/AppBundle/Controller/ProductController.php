@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,6 +38,7 @@ class ProductController extends Controller
     /**
      * Displays a form to create a new Product document.
      *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/new", name="product_new")
      * @Template()
      *
@@ -74,6 +76,11 @@ class ProductController extends Controller
             $dm = $this->getDocumentManager();
             $dm->persist($document);
             $dm->flush();
+
+            $this->addFlash(
+                'notice',
+                'Product created successfully'
+            );
 
             return $this->redirect($this->generateUrl('product_show', array('id' => $document->getId())));
         }
@@ -117,6 +124,7 @@ class ProductController extends Controller
     /**
      * Displays a form to edit an existing Product document.
      *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/{id}/edit", name="product_edit")
      * @Template()
      *
@@ -178,7 +186,12 @@ class ProductController extends Controller
             $dm->persist($document);
             $dm->flush();
 
-            return $this->redirect($this->generateUrl('product_edit', array('id' => $id)));
+            $this->addFlash(
+                'notice',
+                'Product edited successfully'
+            );
+
+            return $this->redirect($this->generateUrl('product_show', array('id' => $id)));
         }
 
         return array(
@@ -216,6 +229,11 @@ class ProductController extends Controller
 
             $dm->remove($document);
             $dm->flush();
+
+            $this->addFlash(
+                'notice',
+                'Product deleted successfully'
+            );
         }
 
         return $this->redirect($this->generateUrl('product'));

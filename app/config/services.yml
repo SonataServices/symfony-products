@@ -8,3 +8,6 @@ services:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
+    logout_listener:
+        class: AppBundle\Listener\LogoutListener
+
