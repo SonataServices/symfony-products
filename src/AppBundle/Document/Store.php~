@@ -29,11 +29,6 @@ class Store
     */
     protected $products;
     
-    public function __construct()
-    {
-        $this->$products = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
     /**
      * Get id
      *
@@ -88,33 +83,5 @@ class Store
         return $this->location;
     }
 
-    /**
-     * Add product
-     *
-     * @param AppBundle\Document\Product $product
-     */
-    public function addProduct(\AppBundle\Document\Product $product)
-    {
-        $this->products[] = $product;
-    }
-
-    /**
-     * Remove product
-     *
-     * @param AppBundle\Document\Product $products
-     */
-    public function removeProducts(\AppBundle\Document\Product $product)
-    {
-        $this->store->removeElement($product);
-    }
-
-    /**
-     * Get products
-     *
-     * @return \Doctrine\Common\Collections\Collection $products
-     */
-    public function getProducts()
-    {
-        return $this->products;
-    }
+   
 }

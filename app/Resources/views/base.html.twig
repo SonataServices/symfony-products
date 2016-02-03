@@ -31,13 +31,14 @@
               <ul class="nav navbar-nav">
                 <li><a href="{{ path('homepage') }}">Home</a></li>
                 <li><a href="{{ path('product') }}">Products</a></li>
-                <li><a href="{{ path('store') }}">Stores</a></li>                
+                <li><a href="{{ path('store') }}">Stores</a></li>
+                <li><a href="{{ path('user') }}">Users</a></li>    
               </ul>
             </div><!--/.nav-collapse -->
           </div>
         </nav>
         <div class="container">
-            <a href="{{ logout_path(app.security.token.providerKey) }}">Logout</a>
+
         {% block body %}{% endblock %}
         </div>
          <!-- Latest compiled and minified JavaScript -->

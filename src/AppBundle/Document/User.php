@@ -1,46 +1,65 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace AppBundle\Document;
 
-namespace Symfony\Component\Security\Core\User;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * User is the user implementation used by the in-memory user provider.
- *
- * This should not be used for anything else.
- *
- * @author Fabien Potencier <fabien@symfony.com>
+ * @MongoDB\Document(repositoryClass="AppBundle\Repository\UserRepository")
  */
-final class User implements AdvancedUserInterface
+class User implements AdvancedUserInterface, \Serializable
 {
-    private $username;
-    private $password;
-    private $enabled;
-    private $accountNonExpired;
-    private $credentialsNonExpired;
-    private $accountNonLocked;
-    private $roles;
+    /**
+     * @MongoDB\Id
+     */
+    protected $id;
 
-    public function __construct($username, $password, array $roles = array(), $enabled = true, $userNonExpired = true, $credentialsNonExpired = true, $userNonLocked = true)
+    /**
+     * @MongoDB\String
+     */
+    protected $username;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $password;
+
+    /**
+     * @MongoDB\Boolean
+     */
+    protected $enabled;
+
+    /**
+     * @MongoDB\Boolean
+     */
+    protected $accountNonExpired;
+
+    /**
+     * @MongoDB\Boolean
+     */
+    protected $credentialsNonExpired;
+
+    /**
+     * @MongoDB\Boolean
+     */
+    protected $accountNonLocked;
+
+    /**
+     * @MongoDB\Collection
+     */
+    protected $roles;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $salt;
+
+    public function __construct()
     {
-        if ('' === $username || null === $username) {
-            throw new \InvalidArgumentException('The username cannot be empty.');
-        }
-
-        $this->username = $username;
-        $this->password = $password;
-        $this->enabled = $enabled;
-        $this->accountNonExpired = $userNonExpired;
-        $this->credentialsNonExpired = $credentialsNonExpired;
-        $this->accountNonLocked = $userNonLocked;
-        $this->roles = $roles;
+        $this->enabled = true;
+        // may not be needed, see section on salt below
+        // $this->salt = md5(uniqid(null, true));
     }
 
     public function __toString()
@@ -48,31 +67,44 @@ final class User implements AdvancedUserInterface
         return $this->getUsername();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getSalt()
     {
+        //return $this->salt;
+        return null;
+    }
+
+    public function setSalt($salt)
+    {
+       $this->salt=$salt;
+       return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Get id
+     *
+     * @return id $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return self
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string $username
      */
     public function getUsername()
     {
@@ -80,41 +112,186 @@ final class User implements AdvancedUserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Set password
+     *
+     * @param string $password
+     * @return self
      */
-    public function isAccountNonExpired()
+    public function setPassword($password)
     {
-        return $this->accountNonExpired;
+        $this->password = $password;
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Get password
+     *
+     * @return string $password
      */
-    public function isAccountNonLocked()
+    public function getPassword()
     {
-        return $this->accountNonLocked;
+        return $this->password;
     }
 
     /**
-     * {@inheritdoc}
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return self
      */
-    public function isCredentialsNonExpired()
+    public function setEnabled($enabled)
     {
-        return $this->credentialsNonExpired;
+        $this->enabled = $enabled;
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Get enabled
+     *
+     * @return boolean $enabled
      */
-    public function isEnabled()
+    public function getEnabled()
     {
         return $this->enabled;
     }
 
     /**
-     * {@inheritdoc}
+     * Set accountNonExpired
+     *
+     * @param boolean $accountNonExpired
+     * @return self
      */
+    public function setAccountNonExpired($accountNonExpired)
+    {
+        $this->accountNonExpired = $accountNonExpired;
+        return $this;
+    }
+
+    /**
+     * Get accountNonExpired
+     *
+     * @return boolean $accountNonExpired
+     */
+    public function getAccountNonExpired()
+    {
+        return $this->accountNonExpired;
+    }
+
+    /**
+     * Set credentialsNonExpired
+     *
+     * @param boolean $credentialsNonExpired
+     * @return self
+     */
+    public function setCredentialsNonExpired($credentialsNonExpired)
+    {
+        $this->credentialsNonExpired = $credentialsNonExpired;
+        return $this;
+    }
+
+    /**
+     * Get credentialsNonExpired
+     *
+     * @return boolean $credentialsNonExpired
+     */
+    public function getCredentialsNonExpired()
+    {
+        return $this->credentialsNonExpired;
+    }
+
+    /**
+     * Set accountNonLocked
+     *
+     * @param boolean $accountNonLocked
+     * @return self
+     */
+    public function setAccountNonLocked($accountNonLocked)
+    {
+        $this->accountNonLocked = $accountNonLocked;
+        return $this;
+    }
+
+    /**
+     * Get accountNonLocked
+     *
+     * @return boolean $accountNonLocked
+     */
+    public function getAccountNonLocked()
+    {
+        return $this->accountNonLocked;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param collection $roles
+     * @return self
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return collection $roles
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
     public function eraseCredentials()
     {
     }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->enabled
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->enabled
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
+    }
+
+
 }

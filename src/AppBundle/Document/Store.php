@@ -84,4 +84,38 @@ class Store
     }
 
    
+    public function __construct()
+    {
+        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add product
+     *
+     * @param AppBundle\Document\Product $product
+     */
+    public function addProduct(\AppBundle\Document\Product $product)
+    {
+        $this->products[] = $product;
+    }
+
+    /**
+     * Remove product
+     *
+     * @param AppBundle\Document\Product $product
+     */
+    public function removeProduct(\AppBundle\Document\Product $product)
+    {
+        $this->products->removeElement($product);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection $products
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
 }
